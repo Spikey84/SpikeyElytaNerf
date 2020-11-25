@@ -1,6 +1,7 @@
 package io.github.spikey84.spikeyelytranerf;
 
 import org.bukkit.Material;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -9,11 +10,13 @@ import static org.bukkit.enchantments.Enchantment.*;
 
 public class eListener implements Listener {
 
-    public boolean checkItem(ItemStack I, ItemStack O, ItemStack C) {
+    public boolean checkItem(ItemStack I, ItemStack O, ItemStack C, PrepareAnvilEvent E) {
         if(O.getType() != Material.ELYTRA) return false;
+        if(C.getType()==Material.PHANTOM_MEMBRANE) E.getInventory().setRepairCost(5);
         if(O.containsEnchantment(MENDING) && !I.containsEnchantment(MENDING)) return true;
         return C.containsEnchantment(MENDING);
     }
+
 
 
     @EventHandler
@@ -24,7 +27,7 @@ public class eListener implements Listener {
         ItemStack outputItem = event.getResult();
         ItemStack combinedItem = event.getInventory().getItem(1);
 
-        if (!checkItem(inputItem, outputItem, combinedItem)) return;
+        if (!checkItem(inputItem, outputItem, combinedItem, event)) return;
         event.setResult(new ItemStack(Material.AIR));
 
 
